@@ -1,6 +1,6 @@
 // ==============================================================================
 // Healthcare HR Platform - Clinical Database Schema
-// PostgreSQL on Supabase (Pooler + Direct Migration connection)
+// PostgreSQL on Supabase (Driver adapter pattern with resilient fallback)
 // ==============================================================================
 
 generator client {
@@ -74,6 +74,22 @@ enum LeaveStatus {
   CANCELLED
 }
 
+enum SwapStatus {
+  PENDING_PEER
+  PENDING_SUPERVISOR
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum BadgeCode {
+  SHIFT_HERO
+  COUNCIL_CHAMPION
+  PUNCTUAL_PILLAR
+  NIGHT_SENTINEL
+  HANDOVER_MASTER
+}
+
 // ------------------------------------------------------------------------------
 // Core User & Auth Models
 // ------------------------------------------------------------------------------
@@ -136,6 +152,9 @@ model StaffProfile {
   shiftAssignments ShiftAssignment[]
   leaveRequests    LeaveRequest[]
   leaveBalances    LeaveBalance[]
+  requestedSwaps   ShiftSwapRequest[] @relation("RequesterSwaps")
+  peerSwaps        ShiftSwapRequest[] @relation("PeerSwaps")
+  gamification     GamificationProfile?
 
   @@index([departmentId])
   @@index([fullName])
@@ -214,6 +233,8 @@ model Shift {
   updatedAt            DateTime          @updatedAt @map("updated_at")
 
   assignments          ShiftAssignment[]
+  requesterSwaps       ShiftSwapRequest[] @relation("RequesterShiftSwaps")
+  peerSwaps            ShiftSwapRequest[] @relation("PeerShiftSwaps")
 
   @@map("shifts")
 }
@@ -233,6 +254,37 @@ model ShiftAssignment {
   @@index([staffProfileId, date])
   @@index([date])
   @@map("shift_assignments")
+}
+
+// ------------------------------------------------------------------------------
+// Clinical Shift Swap Requests (with Hard Cooldown Safeguards)
+// ------------------------------------------------------------------------------
+
+model ShiftSwapRequest {
+  id                 String       @id @default(uuid())
+  requesterStaffId   String       @map("requester_staff_id")
+  requesterStaff     StaffProfile @relation("RequesterSwaps", fields: [requesterStaffId], references: [id], onDelete: Cascade)
+  peerStaffId        String       @map("peer_staff_id")
+  peerStaff          StaffProfile @relation("PeerSwaps", fields: [peerStaffId], references: [id], onDelete: Cascade)
+  requesterShiftId   String       @map("requester_shift_id")
+  requesterShift     Shift        @relation("RequesterShiftSwaps", fields: [requesterShiftId], references: [id])
+  peerShiftId        String       @map("peer_shift_id")
+  peerShift          Shift        @relation("PeerShiftSwaps", fields: [peerShiftId], references: [id])
+  requesterShiftDate DateTime     @map("requester_shift_date") @db.Date
+  peerShiftDate      DateTime     @map("peer_shift_date") @db.Date
+  reason             String
+  status             SwapStatus   @default(PENDING_PEER)
+  cooldownRestHours  Float        @default(8.0) @map("cooldown_rest_hours")
+  supervisorId       String?      @map("supervisor_id")
+  supervisorNotes    String?      @map("supervisor_notes")
+  reviewedAt         DateTime?    @map("reviewed_at")
+  createdAt          DateTime     @default(now()) @map("created_at")
+  updatedAt          DateTime     @updatedAt @map("updated_at")
+
+  @@index([requesterStaffId])
+  @@index([peerStaffId])
+  @@index([status])
+  @@map("shift_swap_requests")
 }
 
 // ------------------------------------------------------------------------------
@@ -280,4 +332,55 @@ model LeaveRequest {
   @@index([staffProfileId])
   @@index([status])
   @@map("leave_requests")
+}
+
+// ------------------------------------------------------------------------------
+// Gamification & Staff Wellness Models (Compassionate Recognition)
+// ------------------------------------------------------------------------------
+
+model GamificationProfile {
+  id                  String             @id @default(uuid())
+  staffProfileId      String             @unique @map("staff_profile_id")
+  staffProfile        StaffProfile       @relation(fields: [staffProfileId], references: [id], onDelete: Cascade)
+  vitalityPointsTotal Int                @default(0) @map("vitality_points_total")
+  currentStreakDays   Int                @default(0) @map("current_streak_days")
+  highestStreakDays   Int                @default(0) @map("highest_streak_days")
+  streakShieldActive  Boolean            @default(false) @map("streak_shield_active")
+  level               Int                @default(1)
+  levelTitle          String             @default("Caregiver Apprentice") @map("level_title")
+  lastActiveDate      DateTime?          @map("last_active_date") @db.Date
+  createdAt           DateTime           @default(now()) @map("created_at")
+  updatedAt           DateTime           @updatedAt @map("updated_at")
+
+  badges              GamificationBadge[]
+  pointLogs           VitalityPointLog[]
+
+  @@map("gamification_profiles")
+}
+
+model GamificationBadge {
+  id                    String              @id @default(uuid())
+  gamificationProfileId String              @map("gamification_profile_id")
+  profile               GamificationProfile @relation(fields: [gamificationProfileId], references: [id], onDelete: Cascade)
+  badgeCode             BadgeCode           @map("badge_code")
+  title                 String
+  description           String
+  earnedAt              DateTime            @default(now()) @map("earned_at")
+
+  @@unique([gamificationProfileId, badgeCode])
+  @@map("gamification_badges")
+}
+
+model VitalityPointLog {
+  id                    String              @id @default(uuid())
+  gamificationProfileId String              @map("gamification_profile_id")
+  profile               GamificationProfile @relation(fields: [gamificationProfileId], references: [id], onDelete: Cascade)
+  points                Int
+  reason                String
+  multiplier            Float               @default(1.0)
+  date                  DateTime            @default(now()) @db.Date
+  createdAt             DateTime            @default(now()) @map("created_at")
+
+  @@index([gamificationProfileId, date])
+  @@map("vitality_point_logs")
 }
