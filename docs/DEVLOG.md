@@ -94,10 +94,34 @@
 
 ---
 
+### Sprint 5: Clinical Shift Swap Hard Cooldowns, Staff Wellness Gamification & Mobile Live Bridge
+**Date:** 2026-10-12  
+**Focus:** Peer shift swap exchange with strict 8-hour fatigue rest safeguards, ethical gamification anti-burnout points engine, and mobile typed API endpoints adapter.
+
+#### 🎯 Objectives
+- Enforce clinical rest cooldown policies preventing nurses from taking back-to-back shifts (e.g. Night vigil into Morning shift).
+- Implement ethical gamification mechanics according to `docs/GDD.md` (150 VP daily ceiling, 1.5x night multiplier, levels 1-5, badges).
+- Build the typed API endpoints bridge in `Mobile/src/services/api/` with automatic mock fallback.
+
+#### 🛠️ Work Done
+1. **Shift Swap Hard Cooldown Engine (`server/src/shifts/`)**:
+   - Implemented `ShiftsService` with `enforceRestCooldown()` blocking swaps with <8h rest.
+   - Built atomic assignment exchange transaction upon supervisor review.
+2. **Staff Wellness Gamification (`server/src/gamification/`)**:
+   - Implemented `GamificationService` with `calculateCappedPoints()` enforcing the 150 VP/day ceiling.
+   - Added level progression ladder (`Caregiver Apprentice` to `Healthcare Sentinel`) and badge awards.
+3. **Mobile Live Integration Bridge (`Mobile/src/services/api/`)**:
+   - Authored `endpoints.ts` covering auth, attendance, staff, councils, shifts, and leaves with seamless zero-friction fallback.
+4. **Verification & Testing**:
+   - Added Vitest unit test suites for fatigue cooldowns and daily point caps (all 13 tests passing).
+   - Zero errors in `bun run tsc --noEmit` across both `Mobile/` and `server/`.
+
+---
+
 ## 🔭 Next Sprint Backlog
 
-- [ ] **Mobile-Backend Bridge**: Configure live API client toggle in `Mobile/src/services/api/client.ts` to switch from mock fixtures to live NestJS endpoints.
-- [ ] **Shift Swap Engine**: Scaffold shift swap exchange workflow with supervisor approvals in `server/src/shifts/`.
-- [ ] **Gamification Module**: Implement Vitality Points calculation and punctuality streaks in `server/src/gamification/`.
-- [ ] **Maestro E2E Flows**: Write automated test flow for punch-in, shift view, and leave request submission.
+- [ ] **E2E Automation Flows**: Write automated test flow for punch-in, shift view, and leave request submission.
+- [ ] **EAS Build Configuration**: Configure `eas.json` profiles for Android APK and iOS development builds.
+- [ ] **Git Merge to Main**: Merge feature branches into `main` and tag milestone release.
+
 
