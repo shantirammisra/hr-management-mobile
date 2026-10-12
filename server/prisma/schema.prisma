@@ -1,0 +1,283 @@
+// ==============================================================================
+// Healthcare HR Platform - Clinical Database Schema
+// PostgreSQL on Supabase (Pooler + Direct Migration connection)
+// ==============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ------------------------------------------------------------------------------
+// Enums
+// ------------------------------------------------------------------------------
+
+enum Role {
+  ROLE_SUPER_ADMIN
+  ROLE_HR_ADMIN
+  ROLE_DEPT_HEAD
+  ROLE_STAFF
+  ROLE_AUDITOR
+}
+
+enum CouncilType {
+  NMC // Nepal Medical Council
+  NNC // Nepal Nursing Council
+  NPC // Nepal Pharmacy Council
+}
+
+enum VerificationStatus {
+  VERIFIED
+  PENDING_REVIEW
+  EXPIRED
+  REJECTED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  LATE
+  ABSENT
+  ON_LEAVE
+  HALF_DAY
+  HOLIDAY
+  OFF
+}
+
+enum PunchType {
+  MOBILE_GPS
+  BIOMETRIC_DEVICE
+  MANUAL_CORRECTION
+}
+
+enum ShiftType {
+  MORNING
+  EVENING
+  NIGHT
+  GENERAL
+}
+
+enum LeaveType {
+  CASUAL
+  SICK
+  MATERNITY
+  STUDY
+  BEREAVEMENT
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+// ------------------------------------------------------------------------------
+// Core User & Auth Models
+// ------------------------------------------------------------------------------
+
+model User {
+  id               String        @id @default(uuid())
+  employeeCode     String        @unique @map("employee_code")
+  email            String        @unique
+  passwordHash     String        @map("password_hash")
+  role             Role          @default(ROLE_STAFF)
+  isActive         Boolean       @default(true) @map("is_active")
+  refreshTokenHash String?       @map("refresh_token_hash")
+  lastLoginAt      DateTime?     @map("last_login_at")
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
+
+  staffProfile     StaffProfile?
+
+  @@index([employeeCode])
+  @@index([email])
+  @@map("users")
+}
+
+// ------------------------------------------------------------------------------
+// Department & Clinical Staff Profile
+// ------------------------------------------------------------------------------
+
+model Department {
+  id                   String         @id @default(uuid())
+  code                 String         @unique
+  name                 String
+  wardLocation         String         @map("ward_location")
+  minimumStaffingCount Int            @default(4) @map("minimum_staffing_count")
+  createdAt            DateTime       @default(now()) @map("created_at")
+  updatedAt            DateTime       @updatedAt @map("updated_at")
+
+  staffProfiles        StaffProfile[]
+  shifts               Shift[]
+
+  @@map("departments")
+}
+
+model StaffProfile {
+  id               String             @id @default(uuid())
+  userId           String             @unique @map("user_id")
+  user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName         String             @map("full_name")
+  phoneNumber      String?            @map("phone_number")
+  emergencyContact String?            @map("emergency_contact")
+  departmentId     String             @map("department_id")
+  department       Department         @relation(fields: [departmentId], references: [id])
+  designation      String
+  avatarUrl        String?            @map("avatar_url")
+  joinDate         DateTime           @default(now()) @map("join_date")
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+
+  councilLicenses  CouncilLicense[]
+  attendanceRecords AttendanceRecord[]
+  shiftAssignments ShiftAssignment[]
+  leaveRequests    LeaveRequest[]
+  leaveBalances    LeaveBalance[]
+
+  @@index([departmentId])
+  @@index([fullName])
+  @@map("staff_profiles")
+}
+
+// ------------------------------------------------------------------------------
+// Medical Council Licensing (NMC, NNC, NPC)
+// ------------------------------------------------------------------------------
+
+model CouncilLicense {
+  id                 String             @id @default(uuid())
+  staffProfileId     String             @map("staff_profile_id")
+  staffProfile       StaffProfile       @relation(fields: [staffProfileId], references: [id], onDelete: Cascade)
+  councilType        CouncilType        @map("council_type")
+  registrationNumber String             @map("registration_number")
+  issueDate          DateTime           @map("issue_date")
+  expiryDate         DateTime           @map("expiry_date")
+  verificationStatus VerificationStatus @default(PENDING_REVIEW) @map("verification_status")
+  verifiedAt         DateTime?          @map("verified_at")
+  certificateUrl     String?            @map("certificate_url")
+  createdAt          DateTime           @default(now()) @map("created_at")
+  updatedAt          DateTime           @updatedAt @map("updated_at")
+
+  @@unique([councilType, registrationNumber])
+  @@index([staffProfileId])
+  @@index([expiryDate])
+  @@map("council_licenses")
+}
+
+// ------------------------------------------------------------------------------
+// Split Visual Attendance & Geofenced Punches
+// ------------------------------------------------------------------------------
+
+model AttendanceRecord {
+  id                String           @id @default(uuid())
+  staffProfileId    String           @map("staff_profile_id")
+  staffProfile      StaffProfile     @relation(fields: [staffProfileId], references: [id], onDelete: Cascade)
+  date              DateTime         @db.Date
+  punchInTime       DateTime?        @map("punch_in_time")
+  punchOutTime      DateTime?        @map("punch_out_time")
+  punchInType       PunchType?       @map("punch_in_type")
+  punchOutType      PunchType?       @map("punch_out_type")
+  punchInLatitude   Float?           @map("punch_in_latitude")
+  punchInLongitude  Float?           @map("punch_in_longitude")
+  punchOutLatitude  Float?           @map("punch_out_latitude")
+  punchOutLongitude Float?           @map("punch_out_longitude")
+  geofenceValid     Boolean          @default(true) @map("geofence_valid")
+  biometricVerified Boolean          @default(false) @map("biometric_verified")
+  status            AttendanceStatus @default(PRESENT)
+  workDurationMinutes Int            @default(0) @map("work_duration_minutes")
+  discrepancyNotes  String?          @map("discrepancy_notes")
+  createdAt         DateTime         @default(now()) @map("created_at")
+  updatedAt         DateTime         @updatedAt @map("updated_at")
+
+  @@unique([staffProfileId, date])
+  @@index([staffProfileId, date])
+  @@index([date])
+  @@map("attendance_records")
+}
+
+// ------------------------------------------------------------------------------
+// Shifts & Roster Scheduling
+// ------------------------------------------------------------------------------
+
+model Shift {
+  id                   String            @id @default(uuid())
+  departmentId         String            @map("department_id")
+  department           Department        @relation(fields: [departmentId], references: [id])
+  shiftType            ShiftType         @map("shift_type")
+  name                 String
+  startTime            String            @map("start_time") // HH:mm format e.g. "07:00"
+  endTime              String            @map("end_time")   // HH:mm format e.g. "15:00"
+  minimumStaffingCount Int               @default(2) @map("minimum_staffing_count")
+  createdAt            DateTime          @default(now()) @map("created_at")
+  updatedAt            DateTime          @updatedAt @map("updated_at")
+
+  assignments          ShiftAssignment[]
+
+  @@map("shifts")
+}
+
+model ShiftAssignment {
+  id             String       @id @default(uuid())
+  shiftId        String       @map("shift_id")
+  shift          Shift        @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+  staffProfileId String       @map("staff_profile_id")
+  staffProfile   StaffProfile @relation(fields: [staffProfileId], references: [id], onDelete: Cascade)
+  date           DateTime     @db.Date
+  notes          String?
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  @@unique([shiftId, staffProfileId, date])
+  @@index([staffProfileId, date])
+  @@index([date])
+  @@map("shift_assignments")
+}
+
+// ------------------------------------------------------------------------------
+// Leave Management & Approvals
+// ------------------------------------------------------------------------------
+
+model LeaveBalance {
+  id                 String       @id @default(uuid())
+  staffProfileId     String       @map("staff_profile_id")
+  staffProfile       StaffProfile @relation(fields: [staffProfileId], references: [id], onDelete: Cascade)
+  year               Int
+  casualTotal        Int          @default(12) @map("casual_total")
+  casualUsed         Int          @default(0) @map("casual_used")
+  sickTotal          Int          @default(12) @map("sick_total")
+  sickUsed           Int          @default(0) @map("sick_used")
+  studyTotal         Int          @default(15) @map("study_total")
+  studyUsed          Int          @default(0) @map("study_used")
+  maternityTotal     Int          @default(98) @map("maternity_total")
+  maternityUsed      Int          @default(0) @map("maternity_used")
+  createdAt          DateTime     @default(now()) @map("created_at")
+  updatedAt          DateTime     @updatedAt @map("updated_at")
+
+  @@unique([staffProfileId, year])
+  @@index([staffProfileId])
+  @@map("leave_balances")
+}
+
+model LeaveRequest {
+  id             String       @id @default(uuid())
+  staffProfileId String       @map("staff_profile_id")
+  staffProfile   StaffProfile @relation(fields: [staffProfileId], references: [id], onDelete: Cascade)
+  leaveType      LeaveType    @map("leave_type")
+  startDate      DateTime     @map("start_date") @db.Date
+  endDate        DateTime     @map("end_date") @db.Date
+  totalDays      Float        @map("total_days")
+  reason         String
+  handoverNotes  String?      @map("handover_notes")
+  status         LeaveStatus  @default(PENDING)
+  reviewerId     String?      @map("reviewer_id")
+  reviewerNotes  String?      @map("reviewer_notes")
+  reviewedAt     DateTime?    @map("reviewed_at")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  @@index([staffProfileId])
+  @@index([status])
+  @@map("leave_requests")
+}

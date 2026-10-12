@@ -72,9 +72,32 @@
 
 ---
 
+### Sprint 4: Backend Foundation, Prisma Clinical Schema & Domain Services
+**Date:** 2026-10-12  
+**Focus:** PostgreSQL / Supabase Prisma ORM models, JWT auth with refresh token rotation, and core clinical REST endpoints in NestJS.
+
+#### 🎯 Objectives
+- Author comprehensive clinical schema in `server/prisma/schema.prisma` covering Users, Staff Profiles, Medical Councils (NMC, NNC, NPC), Attendance Punches, Shifts, and Leaves.
+- Implement self-contained NestJS authentication with Passport-JWT, Bcrypt hashing, refresh token rotation, and role guards.
+- Scaffold core REST controllers and services for Staff Directory, Council Licensing, Attendance Punches, and Leave approvals.
+
+#### 🛠️ Work Done
+1. **Prisma ORM & PostgreSQL Setup**:
+   - Integrated Prisma 7 with `@prisma/adapter-pg` and `prisma.config.ts`.
+   - Validated schema with 8 clinical domain entities and registered seed script.
+2. **Global Database & Service Layer**:
+   - Created `@Global()` `PrismaModule` and resilient `PrismaService`.
+   - Implemented `AuthModule`, `UsersModule`, `CouncilsModule`, `AttendanceModule`, and `LeavesModule`.
+3. **Quality Gates & Testing**:
+   - All 7 Vitest unit tests pass across authentication and geofenced attendance calculations.
+   - Zero oxlint errors and clean NestJS build (`nest build`).
+
+---
+
 ## 🔭 Next Sprint Backlog
 
-- [ ] **Mobile Auth Flow**: Implement Expo Router `(auth)/login` screen with biometrics and refresh token rotation.
-- [ ] **Calendar Component**: Build high-performance monthly grid with day-level color dots using React Native Reanimated.
-- [ ] **NestJS Attendance Module**: Scaffold `attendance.controller.ts`, `attendance.service.ts`, and Prisma schema migrations.
+- [ ] **Mobile-Backend Bridge**: Configure live API client toggle in `Mobile/src/services/api/client.ts` to switch from mock fixtures to live NestJS endpoints.
+- [ ] **Shift Swap Engine**: Scaffold shift swap exchange workflow with supervisor approvals in `server/src/shifts/`.
+- [ ] **Gamification Module**: Implement Vitality Points calculation and punctuality streaks in `server/src/gamification/`.
 - [ ] **Maestro E2E Flows**: Write automated test flow for punch-in, shift view, and leave request submission.
+
