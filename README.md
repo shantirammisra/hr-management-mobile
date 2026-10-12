@@ -1,56 +1,83 @@
-# Welcome to your Expo app 👋
+# Healthcare HR Management System
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Welcome to the **Healthcare HR Management System** repository. This repository houses the complete design blueprints, architecture specifications, and mobile client implementation for the Healthcare Human Resources (HR) Management platform.
 
-## Get started
+---
 
-1. Install dependencies
+## 📁 Repository Structure
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+hr/
+├── Mobile/              # React Native (Expo SDK 52+) Mobile Application
+│   ├── assets/          # Static assets (images, icons)
+│   ├── src/             # Application source code (Expo Router screens, components)
+│   ├── app.json         # Expo configuration
+│   ├── package.json     # Mobile dependencies and scripts
+│   └── tsconfig.json    # TypeScript configuration
+├── docs/                # Comprehensive blueprints & system architecture
+│   ├── 01-features-specification.md
+│   ├── 02-user-roles-and-permissions.md
+│   ├── 03-design-system.md
+│   ├── 04-screens-and-wireframes.md
+│   ├── 05-mobile-architecture.md
+│   ├── 06-api-backend-integration.md
+│   ├── 07-mobile-testing-plan.md
+│   ├── 08-miro-board-blueprint.md
+│   └── README.md
+└── AGENTS.md            # Development & AI agent instructions
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-### Other setup steps
+## 📱 Mobile Application
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+The mobile app is located in the [`Mobile/`](./Mobile) directory. It is built using:
+- **Framework:** React Native with Expo SDK 52+ (Managed Workflow)
+- **Routing:** Expo Router (file-based navigation)
+- **Language:** TypeScript
+- **Package Manager:** Bun
 
-## Learn more
+### Getting Started
 
-To learn more about developing your project with Expo, look at the following resources:
+To run the mobile app locally:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+cd Mobile
 
-## Join the community
+# Install dependencies
+bun install
 
-Join our community of developers creating universal apps.
+# Start the Expo development server
+bunx expo start
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Verification & Testing Commands
+
+Run from the `Mobile/` directory:
+
+```bash
+cd Mobile
+
+# Run Expo Doctor diagnostic checks
+bunx expo-doctor
+
+# Run ESLint
+bunx expo lint
+
+# Run TypeScript type check
+bunx tsc --noEmit
+```
+
+---
+
+## 📖 Blueprint & Architecture Documentation
+
+For complete design and architectural details, refer to the [`docs/`](./docs) directory:
+- [01 - Functional Features Specification](docs/01-features-specification.md)
+- [02 - User Roles & RBAC Matrix](docs/02-user-roles-and-permissions.md)
+- [03 - Pink Healthcare UI Design System](docs/03-design-system.md)
+- [04 - Screen Map & Wireframes](docs/04-screens-and-wireframes.md)
+- [05 - Mobile Architecture](docs/05-mobile-architecture.md)
+- [06 - API & Backend Integration Contracts](docs/06-api-backend-integration.md)
+- [07 - Mobile Testing Plan](docs/07-mobile-testing-plan.md)
+- [08 - Miro Board Deliverables & Roadmap](docs/08-miro-board-blueprint.md)
