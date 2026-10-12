@@ -9,11 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+---
+
+## [0.4.0] - 2026-10-12
+
 ### Added
-- Geofenced mobile punch-in/out verification with latitude/longitude boundary checking.
-- Automated shift swap workflow with peer acceptance and supervisor approval tiers.
-- Push notifications for upcoming night shifts and pending leave requests via Expo Notifications.
-- Biometric local authentication (FaceID / Fingerprint) integration using `expo-local-authentication`.
+- **Mobile Client Implementation (Expo SDK 57)**:
+  - Pink Healthcare design system with accessible 48dp touch targets (`Button`, `Card`, `Badge`, `Input`, `Avatar`).
+  - Biometric authentication and login flow with local simulation bypass toggle.
+  - Role-filtered clinical navigation tabs (Home Dashboard, Split Attendance Calendar, Staff Directory with NMC/NNC/NPC licensing badges, Leave workflows, Reports, Profile).
+  - Resilient mock clinical fixtures and live API endpoints adapter (`Mobile/src/services/api/endpoints.ts`).
+- **Backend Architecture & Database Layer (NestJS v12 + Prisma 7)**:
+  - Comprehensive clinical Prisma schema with PostgreSQL models (Users, StaffProfiles, CouncilLicenses, AttendanceRecords, Shifts, ShiftAssignments, ShiftSwapRequests, LeaveBalances, LeaveRequests, GamificationProfiles, GamificationBadges, VitalityPointLogs).
+  - Self-contained JWT authentication with refresh token rotation and RBAC guards.
+  - Haversine geofenced attendance punch verification with 500m hospital perimeter.
+  - Clinical Shift Swap Engine with Hard 8-Hour Cooldown Fatigue Safeguards and atomic assignment exchange.
+  - Staff Wellness Gamification Engine with strict 150 VP/day anti-burnout ceiling, night vigil 1.5x multiplier, and level progression ladder.
+  - Rich clinical seed script populating hospital departments and test accounts.
+  - Full suite of Vitest unit tests (13 tests passing across all domain services).
 
 ---
 
