@@ -24,14 +24,21 @@ The documentation is organized into modular specifications covering all facets o
 
 | Document | Title | Description |
 | :--- | :--- | :--- |
-| **[01-features-specification.md](file:///home/grtrsaroj/Documents/hr/docs/01-features-specification.md)** | **Functional Features Specification** | Exhaustive functional specifications for Auth, Profiles, Attendance Calendar, Leave Management, Role-Based Dashboards, Directories, Reports, and System Settings. |
-| **[02-user-roles-and-permissions.md](file:///home/grtrsaroj/Documents/hr/docs/02-user-roles-and-permissions.md)** | **User Roles & RBAC Matrix** | Role definitions (Super Admin, HR Admin, Dept Head, Staff, Auditor) and granular screen/action-level permission matrix. |
-| **[03-design-system.md](file:///home/grtrsaroj/Documents/hr/docs/03-design-system.md)** | **Pink Healthcare UI Design System** | Color tokens, typography, elevation, iconography, status palettes, touch target metrics, and React Native StyleSheet design tokens. |
-| **[04-screens-and-wireframes.md](file:///home/grtrsaroj/Documents/hr/docs/04-screens-and-wireframes.md)** | **Screen Map & Mobile Wireframes** | Complete screen map and ASCII/structural wireframes for all 16 mobile screens, including responsive behavior and state variants. |
-| **[05-mobile-architecture.md](file:///home/grtrsaroj/Documents/hr/docs/05-mobile-architecture.md)** | **Mobile Application Architecture** | Folder architecture, state management (TanStack Query + Zustand), form validation (React Hook Form + Zod), secure storage, offline sync, and TypeScript models. |
-| **[06-api-backend-integration.md](file:///home/grtrsaroj/Documents/hr/docs/06-api-backend-integration.md)** | **API Integration & Contracts** | NestJS REST API endpoints, DTO contracts, JWT session mechanics, error schemas, and mobile networking layer. |
-| **[07-mobile-testing-plan.md](file:///home/grtrsaroj/Documents/hr/docs/07-mobile-testing-plan.md)** | **Mobile Testing Strategy** | Unit/Component testing (Jest + RNTL), E2E test scripts (Maestro), Supertest API integration tests, offline resilience, and device matrix. |
-| **[08-miro-board-blueprint.md](file:///home/grtrsaroj/Documents/hr/docs/08-miro-board-blueprint.md)** | **Miro Board Deliverables & Roadmap** | 12 interactive visual board items: sitemaps, flowcharts, component trees, state transition diagrams, access matrices, and MVP roadmap. |
+| **[PRD.md](PRD.md)** | **Product Requirements Document** | Clinical personas, statutory councils (NNC/NPC/NMC), attendance requirements, and hospital metrics. |
+| **[ARCHITECTURE.md](ARCHITECTURE.md)** | **System Architecture & ERD** | Monorepo topology, mobile and backend design, database entity diagrams, and offline synchronization. |
+| **[DESIGN.md](DESIGN.md)** | **Design System Tokens** | Machine-readable YAML design tokens, typography, glove-friendly ergonomics, and component specs. |
+| **[GDD.md](GDD.md)** | **Gamification Design Document** | Staff engagement engine, Vitality Points, shift hero badges, punctuality streaks, and anti-burnout rules. |
+| **[ROADMAP.md](ROADMAP.md)** | **Strategic Product Roadmap** | Release roadmap from monorepo foundation to enterprise hospital multi-tenant scaling. |
+| **[TESTING.md](TESTING.md)** | **Testing Strategy & Harness** | Full-stack testing pyramid: Vitest, RNTL component tests, Maestro mobile E2E flows, and CI gates. |
+| **[DEVLOG.md](DEVLOG.md)** | **Developer Engineering Log** | Chronological sprint chronicles, technical hurdles, architecture milestones, and active tasks. |
+| **[01-features-specification.md](01-features-specification.md)** | **Functional Features Specification** | Exhaustive functional specifications for Auth, Profiles, Attendance Calendar, Leave Management, Role-Based Dashboards, Directories, Reports, and System Settings. |
+| **[02-user-roles-and-permissions.md](02-user-roles-and-permissions.md)** | **User Roles & RBAC Matrix** | Role definitions (Super Admin, HR Admin, Dept Head, Staff, Auditor) and granular screen/action-level permission matrix. |
+| **[03-design-system.md](03-design-system.md)** | **Pink Healthcare UI Design System** | Color tokens, typography, elevation, iconography, status palettes, touch target metrics, and React Native StyleSheet design tokens. |
+| **[04-screens-and-wireframes.md](04-screens-and-wireframes.md)** | **Screen Map & Mobile Wireframes** | Complete screen map and ASCII/structural wireframes for all 16 mobile screens, including responsive behavior and state variants. |
+| **[05-mobile-architecture.md](05-mobile-architecture.md)** | **Mobile Application Architecture** | Folder architecture, state management (TanStack Query + Zustand), form validation (React Hook Form + Zod), secure storage, offline sync, and TypeScript models. |
+| **[06-api-backend-integration.md](06-api-backend-integration.md)** | **API Integration & Contracts** | NestJS REST API endpoints, DTO contracts, JWT session mechanics, error schemas, and mobile networking layer. |
+| **[07-mobile-testing-plan.md](07-mobile-testing-plan.md)** | **Mobile Testing Strategy** | Unit/Component testing (Jest + RNTL), E2E test scripts (Maestro), Supertest API integration tests, offline resilience, and device matrix. |
+| **[08-miro-board-blueprint.md](08-miro-board-blueprint.md)** | **Miro Board Deliverables & Roadmap** | 12 interactive visual board items: sitemaps, flowcharts, component trees, state transition diagrams, access matrices, and MVP roadmap. |
 
 ---
 
