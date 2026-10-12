@@ -127,12 +127,32 @@ bunx tsc --noEmit
 
 ---
 
+## 🌐 Environment Configurations (Local & Production)
+
+This project uses segregated environment files for local development and production deployments. All actual `.env*` files are strictly protected by git ignore rules (`.gitignore`), while version-controlled `.example` templates guide configuration.
+
+| Scope | Environment | Active File (Ignored) | Template (Committed) | Key Purpose |
+| :--- | :--- | :--- | :--- | :--- |
+| **Server** | Local Dev | `server/.env` & `server/.env.local` | `server/.env.example` | Local PostgreSQL, dev JWT secrets, debug logging, CORS `*` |
+| **Server** | Production | `server/.env.production` | `server/.env.production.example` | Production DB with SSL, strict CORS, 64-char JWT secrets |
+| **Mobile** | Local Dev | `Mobile/.env` & `Mobile/.env.local` | `Mobile/.env.example` | `http://localhost:3000/api/v1`, debug logs enabled |
+| **Mobile** | Production | `Mobile/.env.production` | `Mobile/.env.production.example` | `https://api.healthcare-hr.hospital.org/api/v1`, EAS builds |
+| **Root** | Local / Fullstack | `.env` & `.env.local` | `.env.example` | Monorepo orchestrator & local fullstack environment |
+| **Root** | Production | `.env.production` | `.env.production.example` | Monorepo production deployment reference |
+
+### Mobile API Host Notes for Local Testing
+- **Web & iOS Simulator:** `http://localhost:3000/api/v1`
+- **Android Emulator:** `http://10.0.2.2:3000/api/v1` (10.0.2.2 maps to host machine localhost)
+- **Physical Mobile Device:** `http://<YOUR_LAN_IP>:3000/api/v1` (ensure device is on the same Wi-Fi)
+
+---
+
 ## 🔒 Security & Public Repository Guidelines
 
 This repository is prepared for public distribution. Please adhere to these guidelines:
 - **Zero Secrets Committed:** Never commit `.env` files, API keys, private certificates (`.pem`, `.key`), or keystores (`.jks`, `.keystore`).
 - **Unified `.gitignore`:** All sensitive credentials, build outputs (`dist/`, `build/`, `.expo/`), and `node_modules/` are managed by the single root `.gitignore`.
-- **Environment Templates:** Always document newly introduced environment variables in `server/.env.example` or `Mobile/.env.example`.
+- **Environment Templates:** Always document newly introduced environment variables in `.env.example` or `.env.production.example`.
 
 ---
 
