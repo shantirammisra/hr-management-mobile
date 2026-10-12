@@ -171,9 +171,9 @@ const styles = StyleSheet.create({
     marginBottom: PinkTokens.spacing.md,
   },
   timelineIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
+    width: 44,
+    height: 44,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },

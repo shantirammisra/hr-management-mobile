@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
     ...PinkTokens.typography.caption,
     fontWeight: '600',
     color: PinkTokens.colors.text.muted,
-    width: 38,
+    width: 44,
     textAlign: 'center',
   },
   daysGrid: {
@@ -398,9 +398,9 @@ const styles = StyleSheet.create({
     marginBottom: PinkTokens.spacing.md,
   },
   detailIconBox: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
+    width: 44,
+    height: 44,
+    borderRadius: 12,
     backgroundColor: PinkTokens.colors.brand.soft,
     alignItems: 'center',
     justifyContent: 'center',

@@ -443,9 +443,9 @@ const styles = StyleSheet.create({
     width: '48%',
   },
   actionIconBox: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
+    width: 44,
+    height: 44,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 8,
