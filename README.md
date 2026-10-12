@@ -1,6 +1,6 @@
 # Healthcare HR Management System
 
-Welcome to the **Healthcare HR Management System** repository. This repository houses the complete design blueprints, architecture specifications, and mobile client implementation for the Healthcare Human Resources (HR) Management platform.
+Welcome to the **Healthcare HR Management System** repository. This monorepo houses the complete system architecture, the mobile client application, and the NestJS backend API service for the Healthcare Human Resources (HR) Management platform.
 
 ---
 
@@ -13,7 +13,19 @@ hr/
 │   ├── src/             # Application source code (Expo Router screens, components)
 │   ├── app.json         # Expo configuration
 │   ├── package.json     # Mobile dependencies and scripts
-│   └── tsconfig.json    # TypeScript configuration
+│   ├── tsconfig.json    # TypeScript configuration
+│   └── .env.example     # Environment variable template
+├── server/              # NestJS REST API Gateway & Backend Service
+│   ├── src/             # NestJS controllers, services, modules
+│   │   ├── app.controller.ts
+│   │   ├── app.module.ts
+│   │   ├── app.service.ts
+│   │   └── main.ts
+│   ├── test/            # E2E integration test suites
+│   ├── nest-cli.json    # NestJS CLI configuration
+│   ├── package.json     # Backend dependencies and scripts
+│   ├── tsconfig.json    # TypeScript configuration
+│   └── .env.example     # Environment variable template
 ├── docs/                # Comprehensive blueprints & system architecture
 │   ├── 01-features-specification.md
 │   ├── 02-user-roles-and-permissions.md
@@ -24,12 +36,58 @@ hr/
 │   ├── 07-mobile-testing-plan.md
 │   ├── 08-miro-board-blueprint.md
 │   └── README.md
-└── AGENTS.md            # Development & AI agent instructions
+├── .gitignore           # Unified repository-wide ignore rules
+├── AGENTS.md            # AI agent development rules & guidelines
+└── LICENSE              # Project license
 ```
 
 ---
 
-## 📱 Mobile Application
+## ⚡ Quick Start
+
+### 1. Prerequisites
+- **Node.js**: v20+
+- **Bun**: v1.1+ (`curl -fsSL https://bun.sh/install | bash`)
+
+---
+
+## 🖥️ Backend Service (`server/`)
+
+The backend API is built with **NestJS**, designed with strict RBAC, JWT authentication, and modular architecture.
+
+### Getting Started
+
+```bash
+cd server
+
+# 1. Copy environment template
+cp .env.example .env
+
+# 2. Install dependencies
+bun install
+
+# 3. Start development server
+bun run start:dev
+```
+
+### Verification & Testing Commands
+
+```bash
+cd server
+
+# Build the application
+bun run build
+
+# Run unit tests
+bun run test
+
+# Run linter
+bun run lint
+```
+
+---
+
+## 📱 Mobile Application (`Mobile/`)
 
 The mobile app is located in the [`Mobile/`](./Mobile) directory. It is built using:
 - **Framework:** React Native with Expo SDK 52+ (Managed Workflow)
@@ -39,21 +97,20 @@ The mobile app is located in the [`Mobile/`](./Mobile) directory. It is built us
 
 ### Getting Started
 
-To run the mobile app locally:
-
 ```bash
 cd Mobile
 
-# Install dependencies
+# 1. Copy environment template
+cp .env.example .env.local
+
+# 2. Install dependencies
 bun install
 
-# Start the Expo development server
+# 3. Start Expo development server
 bunx expo start
 ```
 
 ### Verification & Testing Commands
-
-Run from the `Mobile/` directory:
 
 ```bash
 cd Mobile
@@ -67,6 +124,15 @@ bunx expo lint
 # Run TypeScript type check
 bunx tsc --noEmit
 ```
+
+---
+
+## 🔒 Security & Public Repository Guidelines
+
+This repository is prepared for public distribution. Please adhere to these guidelines:
+- **Zero Secrets Committed:** Never commit `.env` files, API keys, private certificates (`.pem`, `.key`), or keystores (`.jks`, `.keystore`).
+- **Unified `.gitignore`:** All sensitive credentials, build outputs (`dist/`, `build/`, `.expo/`), and `node_modules/` are managed by the single root `.gitignore`.
+- **Environment Templates:** Always document newly introduced environment variables in `server/.env.example` or `Mobile/.env.example`.
 
 ---
 

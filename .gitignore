@@ -1,49 +1,106 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+# ==============================================================================
+# Unified .gitignore for Healthcare HR Monorepo (Mobile + Server)
+# ==============================================================================
 
-# dependencies
+# --- Node & Package Managers ---
 node_modules/
+*/node_modules/
+.pnp/
+.pnp.js
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnpm-store/
 
-# Expo
-.expo/
-dist/
-web-build/
-expo-env.d.ts
+# --- Logs & Debug Output ---
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+bun-debug.log*
+*.log
 
-# Native
-.kotlin/
-*.orig.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
-
-# Metro
-.metro-health-check*
-
-# debug
-npm-debug.*
-yarn-debug.*
-yarn-error.*
-
-# macOS
-.DS_Store
+# --- Environment & Sensitive Credentials (Zero Leakage for Public Repo) ---
+.env
+.env.*
+!.env.example
+!.env.*.example
 *.pem
+*.key
+*.cert
+*.crt
 
-# local env files
-.env*.local
-
-# typescript
+# --- Build & Output Artifacts ---
+dist/
+*/dist/
+build/
+*/build/
+out/
+*/out/
+web-build/
+*/web-build/
 *.tsbuildinfo
+.turbo/
+.cache/
 
-example
+# --- Mobile (Expo & React Native) ---
+.expo/
+Mobile/.expo/
+expo-env.d.ts
+Mobile/expo-env.d.ts
 
-# generated native folders
-/ios
-/android
+# Native generated folders (Expo Continuous Native Generation)
+/ios/
+/android/
 ios/
 android/
 Mobile/ios/
 Mobile/android/
-Mobile/.expo/
-Mobile/node_modules/
+.kotlin/
+Mobile/.kotlin/
+
+# Mobile Signing Keys & Provisioning Profiles
+*.jks
+*.p8
+*.p12
+*.mobileprovision
+*.keystore
+*.orig.*
+
+# Metro Bundler Cache
+.metro-health-check*
+
+# --- Server (NestJS & Testing) ---
+coverage/
+*/coverage/
+.nyc_output/
+*/.nyc_output/
+
+# --- IDEs & System Files ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# JetBrains / IDEA
+.idea/
+
+# Editor Workspace & History
+*.code-workspace
+.history/
+
+# Vim & Editor swap files
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+*~
+*.swp
+*.swo
+
+# Temporary directories
+tmp/
+temp/
