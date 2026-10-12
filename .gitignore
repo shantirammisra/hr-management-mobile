@@ -100,7 +100,9 @@ Thumbs.db
 *~
 *.swp
 *.swo
-
 # Temporary directories
 tmp/
 temp/
+
+# Local Antigravity CLI run metadata (keep .agents toolkit tracked in git)
+.agents
