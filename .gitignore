@@ -104,5 +104,9 @@ Thumbs.db
 tmp/
 temp/
 
+# Internal Project Plans (Private, not exposed publicly)
+plan/
+/plan/
+
 # Local Antigravity CLI run metadata (keep .agents toolkit tracked in git)
 .agents
